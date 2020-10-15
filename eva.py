@@ -17,7 +17,13 @@ def EVA():
 
     
     def click_botton(filename, LR="left", clicks=1, pause=0.5):
-        x, y = pg.locateCenterOnScreen("fig/" + filename + ".PNG")
+        while True:
+            try:
+                x, y = pg.locateCenterOnScreen("fig/" + filename + ".PNG")
+                break
+            except TypeError:
+                print("fig/" + filename + ".PNG がみつかりませんでした．")
+                
         
         pg.click(
             x=x, 
@@ -92,11 +98,16 @@ def EVA():
     pg.keyUp("ctrl")
     pg.press("n")
     time.sleep(3)
-    
+
+
     
 if __name__=="__main__":
     
-    srcdir = "X:/48_XRD繰り返し精度/03_繰り返し精度確認2回目/20200312_Crush-900-8_230-2H-1R-3_4min_2mm"
+    """
+    実行前にevaでtempdirからファイルを読み込んで，tempdirをデフォルトにする．
+    """
+    
+    srcdir = "X:/XRDによる炭化物定量/10_標準資料作製/ブルカーXRD"
     tempdir = "Temp/"
     
     #Tempフォルダ内のファイル削除
@@ -126,8 +137,11 @@ if __name__=="__main__":
         
         EVA()
         
-        #rawのファイル名．3文字目以降が数値なので，そこを取り出して2桁にしている．
-        filename = directory[3:].zfill(2)
+        #rawのファイル名．3文字目以降が数値なので，そこを取り出して2桁にしている．←非使用
+        #filename = directory[3:].zfill(2)
+        
+        #ディレクトリ名をrawファイル名にする．
+        filename = directory
         rawfile = glob.glob(os.path.join(tempdir + "/*.raw"))
 
         shutil.copyfile(rawfile[0], os.path.join(crtdir,filename + ".raw"))
